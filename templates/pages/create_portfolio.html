@@ -1,0 +1,40 @@
+{% extends 'index.html' %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $("#add_more_stocks_exchange").on("click", function () {
+            var num = $(".add_from_stock_exchange").length + 1;
+            $("#added_stocks_by_array").append(
+                "<div class=\"add_from_stock_exchange\">\n" +
+                    "<label>Активы:</label>\n" +
+                    "<select name=\"stock_exchange_" + num + "\">\n" +
+                        "<option value=\"USA\">USA</option>\n" +
+                        "<option value=\"Russia\">Russia</option>\n" +
+                    "</select>\n" +
+                    "<br><textarea placeholder=\"stock_ticker: stock_weight, ...\" cols=\"30\" rows=\"5\" name=\"stocks_" + num + "\"></textarea>\n" +
+                "</div>");
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'create_portfolio' %}" method="post" class="create_portfolio">
+        {% csrf_token %}
+        <label for="portfolio_name">Имя портфеля:</label>
+        <input type="text" name="portfolio_name" id="portfolio_name"><br><br>
+        <label for="creation_date">Дата создания:</label><input type="date" name="creation_date"><br><br>
+        <div id="added_stocks_by_array">
+            <div class="add_from_stock_exchange">
+                <label>Активы:</label>
+                <select name="stock_exchange_1">
+                    <option value="United States">United States</option>
+                    <option value="Russia">Russia</option>
+                </select><br>
+                <textarea name="stocks_1" placeholder="stock_ticker: stock_weight, ..." cols="30" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="button" id="add_more_stocks_exchange">Добавить еще</div>
+        <input type="submit" class="button" value="Создать">
+    </form>
+{% endblock %}
+

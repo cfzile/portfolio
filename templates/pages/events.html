@@ -1,0 +1,28 @@
+{% load general %}
+
+{% if events and events|length > 0  %}
+
+    {% for a, b in events.items %}
+
+        <div class="errors" style="background: {% if a != constance.EVENT_INFO %} #F26444 {% else %} #16878c {% endif %}">
+
+            <span id="close_errors">&times;</span>
+
+                <span class="errors_name">{{ a }}:</span>
+                {% for i in b %}
+                    <span class="errors_test">{{ i }}</span><br>
+                {% endfor %}
+
+        </div>
+
+    {% endfor %}
+
+    {% events_clear request %}
+
+{% endif %}
+
+<script type="text/javascript">
+    $("#close_errors").on("click",function () {
+        $(".errors").css("display", "none");
+    });
+</script>

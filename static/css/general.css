@@ -1,0 +1,62 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: #FCF4F1;
+    font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+}
+
+header{
+    display: inline-block;
+    width: 96%;
+    height: 5%;
+    padding: 1% 2%;
+    background: #E55D5D;
+}
+
+header #logo{
+    display: table-cell;
+    text-transform: uppercase;
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+    font-size: 2em;
+    color: white;
+    vertical-align: center;
+}
+
+header .searching {
+    display: table-cell;
+    vertical-align: center;
+    width: 20%;
+}
+
+header .searching input{
+    width: 100%;
+    padding: 2% 5%;
+    border: 0;
+    box-shadow: 0px 0px 5px 0px rgba(255,255,255,0.75);
+    border-radius: 5px;
+}
+
+header menu{
+    text-align: center;
+    display: table-cell;
+    vertical-align: center;
+    width: 70%;
+    margin-left: 10%;
+}
+
+header menu li{
+    display: inline-block;
+    margin-right: 5%;
+}
+
+header menu li a{
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.main_block{
+    padding: 5% 5%;
+    width: 90%;
+    height: 81%;
+}

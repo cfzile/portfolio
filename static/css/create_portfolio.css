@@ -1,0 +1,39 @@
+.create_portfolio input{
+    border: 1px solid #BEB0A5;
+    box-shadow: 0px 0px 10px 0px rgba(255,255,255,0.75);
+    border-radius: 5px;
+    padding: 0.5% 1%;
+    margin-left: 5%;
+}
+
+.create_portfolio select{
+    margin-left: 5%;
+}
+
+.create_portfolio textarea{
+    margin: 2% 5%;
+}
+
+.create_portfolio textarea{
+    padding: 0.5% 1%;
+    outline: none;
+	-moz-appearance: none;
+	border: 1px solid #BEB0A5;
+}
+
+.create_portfolio .button{
+    padding: 1% 2%;
+    display: inline-block;
+    background: #F3B03F;
+    text-align: center;
+    color: white;
+    border: 0;
+    box-shadow: none;
+    border-radius: 5px;
+    margin-left: 0;
+    margin-right: 2%;
+}
+
+.create_portfolio input[type=submit]{
+    background: #E55D5D;
+}

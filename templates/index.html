@@ -1,0 +1,42 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page }}</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="http://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"
+                                    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="{% static "css/general.css" %}" type="text/css">
+    <link rel="stylesheet" href="{% static "css/portfolio_show.css" %}" type="text/css">
+    <link rel="stylesheet" href="{% static "css/create_portfolio.css" %}" type="text/css">
+</head>
+<body>
+
+    {% include "pages/events.html" %}
+
+    <header>
+        <div id="logo">Portfolios</div>
+        <menu>
+            {% for PAGE_NAME, PAGE_URL in constance.PAGES %}
+                <li><a href="{% url PAGE_URL  %}">{{ PAGE_NAME }}</a></li>
+            {% endfor %}
+        </menu>
+        <div class="searching">
+            <form>
+                <input type="text" placeholder="search portfolio by id or name">
+            </form>
+        </div>
+    </header>
+
+    <div class="main_block">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% block scripts %}
+    {% endblock %}
+
+</body>
+</html>

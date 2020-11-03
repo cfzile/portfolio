@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    {% for item in portfolios %}
+        <div class="portfolio_item">
+            Имя: {{ item.portfolio.name }} <br>
+            Число активов: {{ item.number_stocks }} <br>
+            Дата создания: {{ item.portfolio.creation_date }} <br>
+            Доходность: {{ item.R }}
+        </div>
+    {% endfor %}
+{% endblock %}
