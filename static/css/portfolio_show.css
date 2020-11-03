@@ -5,3 +5,13 @@
     padding: 1% 2%;
     margin-bottom: 2%;
 }
+
+.portfolio_item .info{
+    border-collapse: collapse;
+    width: 40%;
+}
+
+.portfolio_item .info td{
+    border: 1px solid black;
+    padding: 1% 2%;
+}

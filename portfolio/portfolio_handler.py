@@ -1,7 +1,7 @@
 import investpy
 import pandas as pd
 from django.utils import timezone, dateformat
-
+import numpy as np
 
 class PortfolioHandler:
 
@@ -42,19 +42,21 @@ class PortfolioHandler:
             closes = list(stocks[ticker]['Close'])
             f = closes[0]
             s = closes[-1]
-            R += ((s - f) / f * 100) * weight
-        return R
+            pr = ((s - f) / f * 100)
+            R += pr * weight
+            self.info[i][2] = np.round(pr, 2)
+        return np.round(R, 2)
 
     def __init__(self, portfolio):
         self.portfolio = portfolio
         self.info = []
+        for i in range(len(portfolio.stock_tickers)):
+            self.info.append([portfolio.stock_tickers[i], np.round(portfolio.stock_weights[i], 5), 0])
         self.number_stocks = len(portfolio.stock_tickers)
         try:
             self.R = self.getR()
         except:
             print("Error")
-        for i in range(len(portfolio.stock_tickers)):
-            self.info.append([portfolio.stock_tickers[i], portfolio.stock_weights[i]])
 
     def updateR(self):
         self.R = self.getR()

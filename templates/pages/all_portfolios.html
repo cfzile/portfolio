@@ -7,6 +7,20 @@
             Число активов: {{ item.number_stocks }} <br>
             Дата создания: {{ item.portfolio.creation_date }} <br>
             Доходность: {{ item.R }}
+            <table class="info">
+                <tr>
+                    <td>Тикер</td>
+                    <td>Вес</td>
+                    <td>Рост (с момента создания)</td>
+                </tr>
+                {% for key, weight, raise in item.info %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ weight }}</td>
+                        <td>{{ raise }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
     {% endfor %}
 {% endblock %}
