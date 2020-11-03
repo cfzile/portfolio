@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'portfolio.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'css-v34-monitoring',
+        'NAME': 'portfolio',
         'USER': 'k118vjfsmunlf2wya38n3j3qykk',
         'PASSWORD': '11auomgwub9rjl81w7gybevb76hbvz5zy8tk52loj1mfe9023s',
         'HOST': 'localhost',
