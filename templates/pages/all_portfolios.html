@@ -1,9 +1,24 @@
 {% extends 'index.html' %}
 
+{% block scripts %}
+    <script type="text/javascript">
+        $(".portfolio_name").on("click", function () {
+            var strClass = $(this).attr("class").toString();
+            var ind = strClass.indexOf(' ') + 1;
+            var obj = $(".more_info_" + strClass.substr(ind));
+            if (obj.css("display").toString() === "none"){
+                obj.css("display", "inline-block");
+            }else{
+                obj.css("display", "none");
+            }
+        })
+    </script>
+{% endblock %}
+
 {% block content %}
     {% for item in portfolios %}
         <div class="portfolio_item">
-            <div class="portfolio_name">{{ item.portfolio.name }}</div>
+            <div class="portfolio_name {{ item.portfolio.id }}">{{ item.portfolio.name }}</div>
             <div class="description">
                 <div class="description_item">
                     <div class="item_name">Дата создания</div>
@@ -19,20 +34,22 @@
                 </div>
             </div>
 
-{#            <table class="info">#}
-{#                <tr>#}
-{#                    <td>Тикер</td>#}
-{#                    <td>Вес</td>#}
-{#                    <td>Рост (с момента создания)</td>#}
-{#                </tr>#}
-{#                {% for key, weight, raise in item.info %}#}
-{#                    <tr>#}
-{#                        <td>{{ key }}</td>#}
-{#                        <td>{{ weight }}</td>#}
-{#                        <td>{{ raise }}</td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-{#            </table>#}
+            <div class="more_info more_info_{{ item.portfolio.id }}">
+                <table class="info">
+                    <tr>
+                        <td>Тикер</td>
+                        <td>Вес</td>
+                        <td>Рост (с момента создания)</td>
+                    </tr>
+                    {% for key, weight, raise in item.info %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ weight }}</td>
+                            <td>{{ raise }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     {% endfor %}
 {% endblock %}

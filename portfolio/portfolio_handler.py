@@ -27,7 +27,7 @@ class PortfolioHandler:
         self.portfolio = portfolio
         self.info = []
         for i in range(len(portfolio.stock_tickers)):
-            self.info.append([portfolio.stock_tickers[i], np.round(portfolio.stock_weights[i], 5), 0])
+            self.info.append([portfolio.stock_tickers[i], np.round(portfolio.stock_weights[i], 10), 0])
         self.number_stocks = len(portfolio.stock_tickers)
         try:
             self.R = self.getR()

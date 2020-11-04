@@ -11,7 +11,7 @@
 
 .portfolio_item .info{
     border-collapse: collapse;
-    width: 40%;
+    width: 100%;
 }
 
 .portfolio_item .info td{
@@ -56,4 +56,10 @@
     text-transform: uppercase;
     font-size: 1.5em;
     color: #363C40;
+}
+
+.portfolio_item .more_info{
+    display: none;
+    width: 100%;
+    margin-top: 5%;
 }
