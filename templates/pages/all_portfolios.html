@@ -30,7 +30,11 @@
                 </div>
                 <div class="description_item">
                     <div class="item_name">Доходность</div>
-                    <div class="item_value">{{ item.R }}%</div>
+                    {% if item.R < 0 %}
+                        <div class="item_value" style="color:#BF472C">{{ item.R }}%</div>
+                    {% else %}
+                        <div class="item_value" style="color:#0B7F8C">{{ item.R }}%</div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -47,7 +51,11 @@
                             <td>{{ key }}</td>
                             <td>{{ weight }}</td>
                             <td>{{ raise }}</td>
-                            <td>{{ raise_in_portfolio }}</td>
+                            {% if raise_in_portfolio < 0 %}
+                                <td style="color:#BF472C">{{ raise_in_portfolio }}%</td>
+                            {% else %}
+                                <td style="color:#0B7F8C">{{ raise_in_portfolio }}%</td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </table>
