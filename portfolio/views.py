@@ -46,9 +46,9 @@ def create_portfolio(request):
                     "stock_exchange_%d" % i) is not None:
                 current_stock_exchange = request.POST.get("stock_exchange_%d" % i)
                 current_stocks = request.POST.get("stocks_%d" % i)
-                stocks = current_stocks.rstrip().split(",")
+                stocks = current_stocks.rstrip().replace('\r', '').replace('\n', '').split(",")
                 for stock in stocks:
-                    key, weight = stock.split(":")
+                    key, weight = stock.rstrip().replace('\r', '').replace('\n', '').split(":")
                     stock_tickers.append(key)
                     stock_weights.append(float(weight))
                     stock_exchanges.append(current_stock_exchange)
