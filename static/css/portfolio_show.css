@@ -1,9 +1,12 @@
 .portfolio_item {
-    box-shadow: 0px 0px 5px 0px rgba(255,255,255,0.75);
+    display: table;
+    vertical-align: middle;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
     width: 96%;
-    background: #F3B03F;
+    background: #F2F2F2;
     padding: 1% 2%;
     margin-bottom: 2%;
+    border-radius: 10px;
 }
 
 .portfolio_item .info{
@@ -14,4 +17,43 @@
 .portfolio_item .info td{
     border: 1px solid black;
     padding: 1% 2%;
+}
+
+.portfolio_item .portfolio_name{
+    position: relative;
+    color: #363C40;
+    font-size: 2em;
+    display: table-cell;
+    vertical-align: middle;
+    width: 20%;
+}
+
+.portfolio_item .description{
+    position: relative;
+    display: table;
+    vertical-align: middle;
+    width: 80%;
+    float: right;
+    text-align: center;
+}
+
+.portfolio_item .description_item{
+    display: table-cell;
+    vertical-align: middle;
+    width: 30%;
+    text-align: center;
+}
+
+.portfolio_item .description_item .item_name{
+    margin-bottom: 5%;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1em;
+    color: #1E0413;
+}
+
+.portfolio_item .description_item .item_value{
+    text-transform: uppercase;
+    font-size: 1.5em;
+    color: #363C40;
 }

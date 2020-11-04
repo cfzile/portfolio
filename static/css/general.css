@@ -1,7 +1,7 @@
 body{
     margin: 0;
     padding: 0;
-    background: #FCF4F1;
+    background: white;
     font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
 }
 
@@ -10,7 +10,7 @@ header{
     width: 96%;
     height: 5%;
     padding: 1% 2%;
-    background: #E55D5D;
+    background: #569BCC;
 }
 
 header #logo{
@@ -19,12 +19,12 @@ header #logo{
     font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
     font-size: 2em;
     color: white;
-    vertical-align: center;
+    vertical-align: middle;
 }
 
 header .searching {
     display: table-cell;
-    vertical-align: center;
+    vertical-align: middle;
     width: 20%;
 }
 
@@ -39,7 +39,7 @@ header .searching input{
 header menu{
     text-align: center;
     display: table-cell;
-    vertical-align: center;
+    vertical-align: middle;
     width: 70%;
     margin-left: 10%;
 }
@@ -50,7 +50,7 @@ header menu li{
 }
 
 header menu li a{
-    color: white;
+    color: #F2F2F2;
     text-decoration: none;
     text-transform: uppercase;
 }
@@ -59,4 +59,9 @@ header menu li a{
     padding: 5% 5%;
     width: 90%;
     height: 81%;
+}
+
+header .searching form{
+    display: table-cell;
+    vertical-align: middle;
 }
