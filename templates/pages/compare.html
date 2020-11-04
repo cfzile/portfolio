@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <form action="{% url 'compare_portfolios' %}" method="post" class="compare_portfolios_form">
+        {% csrf_token %}
+        {% for portfolio in portfolios %}
+            <input type="checkbox" name="{{ portfolio.id }}">{{ portfolio.name }}<br>
+        {% endfor %}
+        <input type="submit" class="button" value="Сравнить">
+    </form>
+    {{ html|safe}}
+{% endblock %}
