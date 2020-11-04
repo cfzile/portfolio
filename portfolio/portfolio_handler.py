@@ -12,6 +12,7 @@ class PortfolioHandler:
         stocks = yf.download(stocks_list, start=from_date, end=to_date)
 
         R = 0
+        checker = 0
         for i in range(len(self.portfolio.stock_tickers)):
             ticker = self.portfolio.stock_tickers[i]
             weight = self.portfolio.stock_weights[i]
@@ -21,13 +22,15 @@ class PortfolioHandler:
             pr = ((s - f) / f * 100)
             R += pr * weight
             self.info[i][2] = np.round(pr, 2)
+            self.info[i][3] = np.round(weight * pr, 10)
+            checker += self.info[i][3]
         return np.round(R, 2)
 
     def __init__(self, portfolio):
         self.portfolio = portfolio
         self.info = []
         for i in range(len(portfolio.stock_tickers)):
-            self.info.append([portfolio.stock_tickers[i], np.round(portfolio.stock_weights[i], 10), 0])
+            self.info.append([portfolio.stock_tickers[i], np.round(portfolio.stock_weights[i], 10), 0, 0])
         self.number_stocks = len(portfolio.stock_tickers)
         try:
             self.R = self.getR()

@@ -40,12 +40,14 @@
                         <td>Тикер</td>
                         <td>Вес</td>
                         <td>Рост (с момента создания)</td>
+                        <td>Вклад в портфель</td>
                     </tr>
-                    {% for key, weight, raise in item.info %}
+                    {% for key, weight, raise, raise_in_portfolio in item.info %}
                         <tr>
                             <td>{{ key }}</td>
                             <td>{{ weight }}</td>
                             <td>{{ raise }}</td>
+                            <td>{{ raise_in_portfolio }}</td>
                         </tr>
                     {% endfor %}
                 </table>
