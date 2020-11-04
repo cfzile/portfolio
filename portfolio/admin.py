@@ -10,4 +10,4 @@ class Portfolios(admin.ModelAdmin):
     view_on_site = True
 
 
-admin.site.register(Portfolios, Portfolio)
+admin.site.register(Portfolio, Portfolios)
