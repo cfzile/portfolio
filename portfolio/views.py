@@ -1,4 +1,5 @@
 import plotly.graph_objs as go
+from django.db.models import Min
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from plotly.graph_objs.scatter import Marker
@@ -7,7 +8,7 @@ from plotly.offline import *
 from portfolio import events, constance
 from portfolio.constance import *
 from portfolio.models import Portfolio
-from portfolio.portfolio_handler import PortfolioHandler
+from portfolio.portfolio_handler import PortfolioHandler, download_stocks
 
 
 def get_full_context(request, context):
@@ -15,10 +16,22 @@ def get_full_context(request, context):
     return {**context, **general_context}
 
 
+def get_all_tickers(portfolios):
+    stocks_list = ''
+    for portfolio in portfolios:
+        for ticker in portfolio.stock_tickers:
+            stocks_list += ticker + ' '
+    return stocks_list
+
+
 def home(request):
-    portfolios = [PortfolioHandler(portfolio) for portfolio in Portfolio.objects.all()]
+    portfolios = Portfolio.objects.all()
+    stocks_list, min_create_date = get_all_tickers(portfolios), Portfolio.objects.aggregate(Min('creation_date'))[
+        'creation_date__min']
+    download_stocks(stocks_list, min_create_date)
     return render(request, 'pages/all_portfolios.html',
-                  get_full_context(request, {'page': MAIN_PAGE_NAME, 'portfolios': portfolios}))
+                  get_full_context(request, {'page': MAIN_PAGE_NAME,
+                                             'portfolios': [PortfolioHandler(portfolio) for portfolio in portfolios]}))
 
 
 def show_portfolio(request, portfolio_id):
@@ -82,18 +95,20 @@ def subscribe_on_portfolio(request):
 
 
 def compare_portfolios(request):
-
     if request.method == "POST":
         portfolios = []
         date_from = timezone.datetime(1999, 1, 1).date()
         for portfolio in Portfolio.objects.all():
             if request.POST.get(str(portfolio.id)) is not None:
-                portfolios.append(PortfolioHandler(portfolio))
+                portfolios.append(portfolio)
                 delta = date_from - portfolio.creation_date
                 if delta.days < 0:
                     date_from = portfolio.creation_date
 
-        R = [[portfolio.portfolio.name, portfolio.getRByDates(date_from)] for portfolio in portfolios]
+        stocks_list, min_create_date = get_all_tickers(portfolios), date_from
+        download_stocks(stocks_list, min_create_date)
+
+        R = [[portfolio.name, PortfolioHandler(portfolio).getRByDates(date_from)] for portfolio in portfolios]
 
         fig = go.Figure()
 

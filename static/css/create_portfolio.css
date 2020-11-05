@@ -30,10 +30,31 @@
     border: 0;
     box-shadow: none;
     border-radius: 5px;
-    margin-left: 0;
-    margin-right: 2%;
+    /*margin-left: 0;*/
+    /*margin-right: 2%;*/
+    text-transform: uppercase;
 }
 
 .create_portfolio input[type=submit]{
     background: #E55D5D;
+}
+
+.create_portfolio{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
+.create_portfolio label{
+    font-size: 1.5em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.create_portfolio input{
+    margin: 2% 0%;
+}
+
+.create_portfolio textarea{
+    resize: none;
 }

@@ -2,8 +2,40 @@
     margin-right: 1%;
 }
 
-.compare_portfolios_form .button{
+.compare_portfolios_form{
+    margin-top: 5%;
+    width: 20%;
+    float: left;
+}
+
+.compare_portfolios_form .choose_table{
+    display: inline-block;
+    width: 100%;
+}
+
+.compare_portfolios_form  .choose_table_td:first-child{
+    display: inline-block;
+    width: 10%;
+}
+
+.compare_portfolios_form  .choose_table_td:last-child{
+    display: inline-block;
+    width: 80%;
+}
+
+.compare_portfolios_form .choose_table_td{
     padding: 1% 2%;
+    vertical-align: middle;
+    /*border: 1px solid black;*/
+    color: #1E0413;
+    font-size: 1.2em;
+}
+
+.compare_portfolios_form .button{
+    /*width: 10%;*/
+    float: right;
+    padding: 5% 8%;
+    text-transform: uppercase;
     display: inline-block;
     background: #F3B03F;
     text-align: center;
@@ -14,4 +46,43 @@
     margin-left: 0;
     margin-right: 2%;
     margin-top: 2%;
+}
+
+.custom-checkbox{
+    float: left;
+    width: 100%;
+    display: inline;
+    text-align: center;
+    margin-bottom: 1%;
+}
+
+input[type=checkbox] {
+    -webkit-appearance: none;
+    height:25px;
+    width: 25px;
+    display:inline-block;
+    line-height:25px;
+    background-repeat:no-repeat;
+    background-position: 0 0;
+    font-size:25px;
+    vertical-align:middle;
+    cursor:pointer;
+    background: #BEB0A5;
+}
+
+input[type=checkbox]:checked {
+    background-position-y: 25px;
+    background-image:url("../img/checkbox.png");
+    border: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.plot {
+    width: 80%;
+    float: left;
 }

@@ -1,4 +1,8 @@
 {% extends 'index.html' %}
+{% load static %}
+{% block header %}
+    <link rel="stylesheet" href="{% static "css/create_portfolio.css" %}" type="text/css">
+{% endblock %}
 
 {% block scripts %}
     <script type="text/javascript">
@@ -20,20 +24,21 @@
 {% block content %}
     <form action="{% url 'create_portfolio' %}" method="post" class="create_portfolio">
         {% csrf_token %}
-        <label for="portfolio_name">Имя портфеля:</label>
-        <input type="text" name="portfolio_name" id="portfolio_name"><br><br>
-        <label for="creation_date">Дата создания:</label><input type="date" name="creation_date"><br><br>
+        <label for="portfolio_name">Имя портфеля</label><br>
+        <input type="text" name="portfolio_name" id="portfolio_name"><br>
+        <label for="creation_date">Дата создания</label><br>
+        <input type="date" name="creation_date"><br>
         <div id="added_stocks_by_array">
             <div class="add_from_stock_exchange">
-                <label>Активы:</label>
-                <select name="stock_exchange_1">
-                    <option value="United States">United States</option>
+                <label>Активы</label>
+                <select name="stock_exchange_1" style="display:none">
+                    <option value="United States" selected>United States</option>
                     <option value="Russia">Russia</option>
                 </select><br>
-                <textarea name="stocks_1" placeholder="stock_ticker: stock_weight, ..." cols="30" rows="5"></textarea>
+                <textarea name="stocks_1" placeholder="stock_ticker: stock_weight, ..." cols="40" rows="8"></textarea>
             </div>
         </div>
-        <div class="button" id="add_more_stocks_exchange">Добавить еще</div>
+{#        <div class="button" id="add_more_stocks_exchange">Добавить еще</div>#}
         <input type="submit" class="button" value="Создать">
     </form>
 {% endblock %}

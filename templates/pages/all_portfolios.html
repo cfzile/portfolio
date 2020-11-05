@@ -1,4 +1,8 @@
 {% extends 'index.html' %}
+{% load static %}
+{% block header %}
+    <link rel="stylesheet" href="{% static "css/portfolio_show.css" %}" type="text/css">
+{% endblock %}
 
 {% block scripts %}
     <script type="text/javascript">

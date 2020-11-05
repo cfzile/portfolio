@@ -8,10 +8,9 @@
                                     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    {% block header %}
+    {% endblock %}
     <link rel="stylesheet" href="{% static "css/general.css" %}" type="text/css">
-    <link rel="stylesheet" href="{% static "css/portfolio_show.css" %}" type="text/css">
-    <link rel="stylesheet" href="{% static "css/create_portfolio.css" %}" type="text/css">
-    <link rel="stylesheet" href="{% static "css/compare.css" %}" type="text/css">
 </head>
 <body>
 
@@ -26,7 +25,7 @@
         </menu>
         <div class="searching">
             <form>
-                <input type="text" placeholder="search portfolio by id or name">
+                <input type="text" placeholder="portfolio id or name">
             </form>
         </div>
     </header>

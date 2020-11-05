@@ -1,12 +1,26 @@
 {% extends 'index.html' %}
+{% load static %}
+{% block header %}
+    <link rel="stylesheet" href="{% static "css/compare.css" %}" type="text/css">
+{% endblock %}
 
 {% block content %}
     <form action="{% url 'compare_portfolios' %}" method="post" class="compare_portfolios_form">
-        {% csrf_token %}
-        {% for portfolio in portfolios %}
-            <input type="checkbox" name="{{ portfolio.id }}">{{ portfolio.name }}<br>
-        {% endfor %}
-        <input type="submit" class="button" value="Сравнить">
+        <div class="choose_table">
+            {% csrf_token %}
+            {% for portfolio in portfolios %}
+                <div class="choose_table_tr">
+                    <div class="choose_table_td"><input class="custom-checkbox" type="checkbox" name="{{ portfolio.id }}"></div>
+                    <div class="choose_table_td">{{ portfolio.name }}</div>
+                </div>
+            {% endfor %}
+            <div class="choose_table_tr">
+                <div class="choose_table_td"></div>
+                <div class="choose_table_td"><input type="submit" class="button" value="Сравнить"></div>
+            </div>
+        </div>
     </form>
-    {{ html|safe}}
+    <div class="plot">
+        {{ html|safe }}
+    </div>
 {% endblock %}

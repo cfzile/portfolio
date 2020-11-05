@@ -1,29 +1,38 @@
 import numpy as np
 import yfinanceng as yf
+import pandas as pd
 from django.utils import timezone, dateformat
+
+stocks = {}
+
+
+def download_stocks(stocks_list, from_date):
+    global stocks
+    from_date = dateformat.format(from_date, 'Y-m-d')
+    to_date = dateformat.format(timezone.now() + timezone.timedelta(days=1), 'Y-m-d')
+    stocks = yf.download(stocks_list, start=from_date, end=to_date)
+    dates = pd.date_range(from_date, timezone.now().date(), freq='D').tolist()
+    stocks = stocks.reindex(dates, method='ffill')
+    for i in [1, 0]:
+        if np.math.isnan(stocks.iloc[i]['Close'][0]):
+            stocks.iloc[i] = stocks.iloc[i + 1]
 
 
 class PortfolioHandler:
 
     def getR(self):
-        from_date = dateformat.format(self.portfolio.creation_date + timezone.timedelta(days=1), 'Y-m-d')
-        to_date = dateformat.format(timezone.now() + timezone.timedelta(days=1), 'Y-m-d')
-        stocks_list = ' '.join(self.portfolio.stock_tickers)
-        stocks = yf.download(stocks_list, start=from_date, end=to_date)
-
         R = 0
-        checker = 0
         for i in range(len(self.portfolio.stock_tickers)):
             ticker = self.portfolio.stock_tickers[i]
             weight = self.portfolio.stock_weights[i]
-            closes = list(stocks['Close'][ticker])
-            f = closes[0]
-            s = closes[-1]
+            current_date = dateformat.format(timezone.now(), 'Y-m-d')
+            creation_date = dateformat.format(self.portfolio.creation_date, 'Y-m-d')
+            s = stocks['Close'][ticker].loc[current_date]
+            f = stocks['Close'][ticker].loc[creation_date]
             pr = ((s - f) / f * 100)
             R += pr * weight
             self.info[i][2] = np.round(pr, 2)
             self.info[i][3] = np.round(weight * pr, 10)
-            checker += self.info[i][3]
         return np.round(R, 2)
 
     def __init__(self, portfolio):
@@ -38,16 +47,14 @@ class PortfolioHandler:
             print(e)
 
     def getRByDates(self, date_from):
-        from_date = dateformat.format(date_from + timezone.timedelta(days=1), 'Y-m-d')
-        to_date = dateformat.format(timezone.now() + timezone.timedelta(days=1), 'Y-m-d')
-        stocks = yf.download(self.portfolio.stock_tickers, start=from_date, end=to_date)
-        dates = [str(s)[:10] for s in list(stocks['Close'].index.values)]
-        columns = list(stocks['Close'].columns)
+        dates = pd.date_range(date_from, timezone.now().date(), freq='D').tolist()
+        local_stocks = stocks['Close'][self.portfolio.stock_tickers]
+        columns = list(local_stocks.columns)
         W = {self.portfolio.stock_tickers[i]: self.portfolio.stock_weights[i] for i in range(self.number_stocks)}
         weights = [W[key] for key in columns]
         R = []
         for i in range(len(dates)):
-            s = stocks['Close'].loc[dates[i]]
-            f = stocks['Close'].loc[dates[0]]
-            R.append(np.array(weights).dot(np.array((s - f)/f)))
+            s = local_stocks.loc[dates[i]]
+            f = local_stocks.loc[dates[0]]
+            R.append(np.array(weights).dot(np.array((s - f) / f)))
         return [dates, R]

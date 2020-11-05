@@ -16,9 +16,8 @@ header{
 header #logo{
     display: table-cell;
     text-transform: uppercase;
-    font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
     font-size: 2em;
-    color: white;
+    color: #F7F7F7;
     vertical-align: middle;
 }
 
@@ -30,9 +29,10 @@ header .searching {
 
 header .searching input{
     width: 100%;
-    padding: 2% 5%;
+    padding: 3% 6%;
     border: 0;
-    box-shadow: 0px 0px 5px 0px rgba(255,255,255,0.75);
+    box-shadow: 0px 0px 5px 0px rgba(255,255,255,0.5);
+    border: 1px solid #BCDBF1;
     border-radius: 5px;
 }
 
