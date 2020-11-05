@@ -59,7 +59,18 @@
 }
 
 .portfolio_item .more_info{
+    padding: 5%;
     display: none;
-    width: 100%;
-    margin-top: 5%;
+    width: 90%;
+}
+
+.portfolio_item .more_info tr:first-child{
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    background: #BEB0A5;
+}
+
+.portfolio_item .more_info td{
+    border-color: #BEB0A5;
 }
