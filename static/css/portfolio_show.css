@@ -27,6 +27,7 @@
     display: table-cell;
     vertical-align: middle;
     width: 20%;
+    font-weight: bold;
 }
 
 .portfolio_item .description{

@@ -26,13 +26,14 @@ header #logo {
 header .searching {
     display: table-cell;
     vertical-align: middle;
-    width: 20%;
 }
 
 header .searching input {
+    display: inline-block;
     width: 100%;
     padding: 3% 6%;
     border: 0;
+    float: right;
     /*box-shadow: 0px 0px 5px 0px rgba(255,255,255,0.5);*/
     border: 1px solid #BCDBF1;
     border-radius: 5px;
@@ -42,7 +43,7 @@ header menu {
     text-align: center;
     display: table-cell;
     vertical-align: middle;
-    width: 70%;
+    width: 75%;
     margin-left: 10%;
 }
 
