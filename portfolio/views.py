@@ -84,14 +84,16 @@ def create_portfolio(request):
                 current_stock_exchange = request.POST.get("stock_exchange_%d" % i)
                 current_stocks = request.POST.get("stocks_%d" % i)
                 stocks = current_stocks.rstrip().replace('\r', '').replace('\n', '').split(",")
+                print(stocks)
                 for stock in stocks:
                     key, weight = stock.rstrip().replace('\r', '').replace('\n', '').split(":")
                     stock_tickers.append(key)
                     stock_weights.append(float(weight))
                     stock_exchanges.append(current_stock_exchange)
+                print(sum(stock_weights))
                 i += 1
 
-            if (sum(stock_weights) - 1.) > 0.000001:
+            if (sum(stock_weights) - 1.) > 0.0001:
                 events.add_event(request, {EVENT_ERROR: [NON_CORRECT_DATA]})
             else:
                 Portfolio.objects.create(name=portfolio_name, stock_weights=stock_weights,
