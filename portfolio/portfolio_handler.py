@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import yfinanceng as yf
 import pandas as pd
@@ -10,16 +12,14 @@ def download_stocks(stocks_list, from_date):
     global stocks
     from_date = dateformat.format(from_date, 'Y-m-d')
     to_date = dateformat.format(timezone.now() + timezone.timedelta(days=1), 'Y-m-d')
-    stocks = yf.download(stocks_list, start=from_date, end=to_date)
+    stocks = yf.download(stocks_list, start=from_date, end=to_date, threads=3)
     dates = pd.date_range(from_date, timezone.now().date(), freq='D').tolist()
     stocks = stocks.reindex(dates, method='ffill')
-    for i in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]:
-        if stocks.shape[0] <= i + 1:
-            continue
-        if np.math.isnan(stocks.iloc[i]['Close'][0]):
-            stocks.iloc[i] = stocks.iloc[i + 1]
-        else:
-            break
+    prev_date = dateformat.format(dates[0], 'Y-m-d')
+    for DATE in dates:
+        date = dateformat.format(DATE, 'Y-m-d')
+        stocks.loc[date] = np.where(stocks.loc[date].isnull(), stocks.loc[prev_date], stocks.loc[date])
+        prev_date = date
 
 
 class PortfolioHandler:

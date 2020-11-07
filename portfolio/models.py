@@ -13,11 +13,7 @@ class Portfolio(models.Model):
     creation_date = models.DateField(default=timezone.now())
 
 
-class StockData(models.Model):
+class Stock(models.Model):
+    ticker = models.CharField(max_length=50, default="none")
     date = models.DateField(default=timezone.now())
     close_price = models.FloatField(default=0)
-
-
-class Stock(models.Model):
-    data = models.ManyToManyField(StockData)
-    ticker = models.CharField(max_length=50)
