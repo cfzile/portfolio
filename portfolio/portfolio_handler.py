@@ -13,9 +13,13 @@ def download_stocks(stocks_list, from_date):
     stocks = yf.download(stocks_list, start=from_date, end=to_date)
     dates = pd.date_range(from_date, timezone.now().date(), freq='D').tolist()
     stocks = stocks.reindex(dates, method='ffill')
-    for i in [1, 0]:
+    for i in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]:
+        if stocks.shape[0] <= i + 1:
+            continue
         if np.math.isnan(stocks.iloc[i]['Close'][0]):
             stocks.iloc[i] = stocks.iloc[i + 1]
+        else:
+            break
 
 
 class PortfolioHandler:
