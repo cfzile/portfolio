@@ -29,9 +29,28 @@ def home(request):
     stocks_list, min_create_date = get_all_tickers(portfolios), Portfolio.objects.aggregate(Min('creation_date'))[
         'creation_date__min']
     download_stocks(stocks_list, min_create_date)
+    portfolios_to_send = [PortfolioHandler(portfolio) for portfolio in portfolios]
+    item = 'r'
+    reversed = True
+    if request.method == "GET" and \
+            not (isEmptyField(request.GET.get('order'))) and not (isEmptyField(request.GET.get('item'))):
+        reversed = False
+        if request.GET.get('order') == 'reversed':
+            reversed = True
+        item = request.GET.get('item')
+        if item == 'r':
+            portfolios_to_send = sorted(portfolios_to_send, key=lambda x: x.R, reverse=reversed)
+        if item == 'name':
+            portfolios_to_send = sorted(portfolios_to_send, key=lambda x: x.portfolio.name, reverse=reversed)
+        if item == 'number_stocks':
+            portfolios_to_send = sorted(portfolios_to_send, key=lambda x: x.number_stocks, reverse=reversed)
+    else:
+        portfolios_to_send = sorted(portfolios_to_send, key=lambda x: -x.R)
     return render(request, 'pages/all_portfolios.html',
                   get_full_context(request, {'page': MAIN_PAGE_NAME,
-                                             'portfolios': [PortfolioHandler(portfolio) for portfolio in portfolios]}))
+                                             'portfolios': portfolios_to_send,
+                                             'item': item,
+                                             'order': reversed}))
 
 
 def show_portfolio(request, portfolio_id):

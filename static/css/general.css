@@ -68,3 +68,17 @@ header .searching form {
     display: table-cell;
     vertical-align: middle;
 }
+
+.button{
+    padding: 1% 2%;
+    display: inline-block;
+    background: #F3B03F;
+    text-align: center;
+    color: white;
+    border: 0;
+    box-shadow: none;
+    border-radius: 5px;
+    /*margin-left: 0;*/
+    /*margin-right: 2%;*/
+    text-transform: uppercase;
+}

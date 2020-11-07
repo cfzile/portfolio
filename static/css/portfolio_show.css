@@ -10,17 +10,17 @@
     /*border-radius: 10px;*/
 }
 
-.portfolio_item .info{
+.portfolio_item .info {
     border-collapse: collapse;
     width: 100%;
 }
 
-.portfolio_item .info td{
+.portfolio_item .info td {
     border: 1px solid black;
     padding: 1% 2%;
 }
 
-.portfolio_item .portfolio_name{
+.portfolio_item .portfolio_name {
     position: relative;
     color: #363C40;
     font-size: 2em;
@@ -30,7 +30,7 @@
     font-weight: bold;
 }
 
-.portfolio_item .description{
+.portfolio_item .description {
     position: relative;
     display: table;
     vertical-align: middle;
@@ -39,14 +39,14 @@
     text-align: center;
 }
 
-.portfolio_item .description_item{
+.portfolio_item .description_item {
     display: table-cell;
     vertical-align: middle;
     width: 30%;
     text-align: center;
 }
 
-.portfolio_item .description_item .item_name{
+.portfolio_item .description_item .item_name {
     margin-bottom: 5%;
     text-transform: uppercase;
     font-weight: bold;
@@ -54,25 +54,87 @@
     color: #1E0413;
 }
 
-.portfolio_item .description_item .item_value{
+.portfolio_item .description_item .item_value {
     text-transform: uppercase;
     font-size: 1.5em;
     color: #363C40;
 }
 
-.portfolio_item .more_info{
+.portfolio_item .more_info {
     padding: 5%;
     display: none;
     width: 90%;
 }
 
-.portfolio_item .more_info tr:first-child{
+.portfolio_item .more_info tr:first-child {
     font-weight: bold;
     text-transform: uppercase;
     color: white;
     background: #363C40;
 }
 
-.portfolio_item .more_info td{
+.portfolio_item .more_info td {
     border-color: #363C40;
+}
+
+.set_order {
+    width: 100%;
+    float: right;
+    text-align: right;
+}
+
+.button {
+    padding: 1% 2%;
+    margin-left: 2%;
+}
+
+select {
+    -moz-appearance: none; /* Firefox */
+    -webkit-appearance: none; /* Safari and Chrome */
+    appearance: none;
+    border: 0;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    background: white;
+    padding: 0.5% 2%;
+    min-width: 200px;
+}
+
+select {
+  background-image:
+    linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%),
+    linear-gradient(to right, #ccc, #ccc);
+  background-position:
+    calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px),
+    calc(100% - 2.5em) 0.5em;
+  background-size:
+    5px 5px,
+    5px 5px,
+    1px 1.5em;
+  background-repeat: no-repeat;
+}
+
+select:focus {
+  background-image:
+    linear-gradient(45deg, green 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, green 50%),
+    linear-gradient(to right, #ccc, #ccc);
+  background-position:
+    calc(100% - 15px) 1em,
+    calc(100% - 20px) 1em,
+    calc(100% - 2.5em) 0.5em;
+  background-size:
+    5px 5px,
+    5px 5px,
+    1px 1.5em;
+  background-repeat: no-repeat;
+  border-color: green;
+  outline: 0;
+}
+
+
+select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
 }

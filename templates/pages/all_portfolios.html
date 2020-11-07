@@ -10,9 +10,9 @@
             var strClass = $(this).attr("class").toString();
             var ind = strClass.indexOf(' ') + 1;
             var obj = $(".more_info_" + strClass.substr(ind));
-            if (obj.css("display").toString() === "none"){
+            if (obj.css("display").toString() === "none") {
                 obj.css("display", "inline-block");
-            }else{
+            } else {
                 obj.css("display", "none");
             }
         })
@@ -20,6 +20,18 @@
 {% endblock %}
 
 {% block content %}
+    <form action="{% url 'home' %}" method="get" class="set_order">
+        <select name="order">
+            <option value="reversed" {% if order == True %} selected {% endif %}>По убыванию</option>
+            <option value="not_reversed" {% if order == False %} selected {% endif %}>По возрастаю</option>
+        </select>
+        <select name="item">
+            <option value="r" {% if item == 'r' %} selected {% endif %}>Доходности</option>
+            <option value="name" {% if item == 'name' %} selected {% endif %}>Имя</option>
+            <option value="number_stocks" {% if item == 'number_stocks' %} selected {% endif %}>Число активов</option>
+        </select>
+        <input type="submit" value="Упорядочить" class="button">
+    </form>
     {% for item in portfolios %}
         <div class="portfolio_item">
             <div class="portfolio_name {{ item.portfolio.id }}">{{ item.portfolio.name }}</div>
