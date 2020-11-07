@@ -1,24 +1,26 @@
-body{
+body {
     margin: 0;
     padding: 0;
-    background: white;
+    background: #f4f4f4;
     font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
 }
 
-header{
+header {
     display: inline-block;
     width: 96%;
     height: 5%;
     padding: 1% 2%;
-    background: #569BCC;
+    background: #028fcc;
 }
 
-header #logo{
+header #logo {
     display: table-cell;
-    text-transform: uppercase;
+    text-transform: lowercase;
     font-size: 2em;
-    color: #F7F7F7;
+    color: #f4f4f4;
+    margin-right: 10%;
     vertical-align: middle;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 header .searching {
@@ -27,16 +29,16 @@ header .searching {
     width: 20%;
 }
 
-header .searching input{
+header .searching input {
     width: 100%;
     padding: 3% 6%;
     border: 0;
-    box-shadow: 0px 0px 5px 0px rgba(255,255,255,0.5);
+    /*box-shadow: 0px 0px 5px 0px rgba(255,255,255,0.5);*/
     border: 1px solid #BCDBF1;
     border-radius: 5px;
 }
 
-header menu{
+header menu {
     text-align: center;
     display: table-cell;
     vertical-align: middle;
@@ -44,24 +46,24 @@ header menu{
     margin-left: 10%;
 }
 
-header menu li{
+header menu li {
     display: inline-block;
     margin-right: 5%;
 }
 
-header menu li a{
-    color: #F2F2F2;
+header menu li a {
+    color: white;
     text-decoration: none;
     text-transform: uppercase;
 }
 
-.main_block{
+.main_block {
     padding: 5% 5%;
     width: 90%;
     height: 81%;
 }
 
-header .searching form{
+header .searching form {
     display: table-cell;
     vertical-align: middle;
 }
