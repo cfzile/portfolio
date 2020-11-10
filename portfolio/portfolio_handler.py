@@ -13,6 +13,9 @@ def download_stocks(stocks_list, from_date):
     from_date = dateformat.format(from_date, 'Y-m-d')
     to_date = dateformat.format(timezone.now() + timezone.timedelta(days=1), 'Y-m-d')
     stocks = yf.download(stocks_list, start=from_date, end=to_date)
+    for i in range(stocks.shape[0]):
+        stocks.iloc[i] = np.where(stocks.iloc[i].isnull(), stocks.iloc[i - 1], stocks.iloc[i])
+    stocks = stocks[~stocks.index.duplicated(keep='first')]
     dates = pd.date_range(from_date, stocks.index[-1], freq='D').tolist()
     print(dates, stocks)
     stocks = stocks.reindex(dates, method='ffill')
