@@ -14,7 +14,7 @@ def download_stocks(stocks_list, from_date):
     to_date = dateformat.format(timezone.now() + timezone.timedelta(days=1), 'Y-m-d')
     stocks = yf.download(stocks_list, start=from_date, end=to_date, threads=3)
     dates = pd.date_range(from_date, stocks.index[-1], freq='D').tolist()
-    print(dates)
+    print(dates, stocks)
     stocks = stocks.reindex(dates, method='ffill')
     prev_date = dateformat.format(dates[0], 'Y-m-d')
     for DATE in dates:
