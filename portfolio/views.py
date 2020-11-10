@@ -8,7 +8,7 @@ from plotly.offline import *
 from portfolio import events, constance
 from portfolio.constance import *
 from portfolio.models import Portfolio
-from portfolio.portfolio_handler import PortfolioHandler, download_stocks
+from portfolio.portfolio_handler import PortfolioHandler, download_stocks, update_data
 
 
 def get_full_context(request, context):
@@ -24,12 +24,21 @@ def get_all_tickers(portfolios):
     return stocks_list
 
 
-def home(request):
+def update_info(request):
+    stocks_list, min_create_date = get_stocks_list()
+    update_data(stocks_list, min_create_date)
+    return redirect('/')
+
+
+def get_stocks_list():
     portfolios = Portfolio.objects.all()
-    stocks_list, min_create_date = get_all_tickers(portfolios), Portfolio.objects.aggregate(Min('creation_date'))[
-        'creation_date__min']
+    return get_all_tickers(portfolios), Portfolio.objects.aggregate(Min('creation_date'))['creation_date__min']
+
+
+def home(request):
+    stocks_list, min_create_date = get_stocks_list()
     download_stocks(stocks_list, min_create_date)
-    portfolios_to_send = [PortfolioHandler(portfolio) for portfolio in portfolios]
+    portfolios_to_send = [PortfolioHandler(portfolio) for portfolio in Portfolio.objects.all()]
     item = 'r'
     reversed = True
     if request.method == "GET" and \

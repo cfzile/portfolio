@@ -1,15 +1,53 @@
-import math
-
 import numpy as np
-import yfinanceng as yf
 import pandas as pd
+import yfinanceng as yf
 from django.utils import timezone, dateformat
 
+from portfolio.models import Stock
+
 stocks = {}
+time_last_update = timezone.now()
 
 
 def download_stocks(stocks_list, from_date):
     global stocks
+    from_date = dateformat.format(from_date, 'Y-m-d')
+    to_date = dateformat.format(timezone.now() + timezone.timedelta(days=1), 'Y-m-d')
+    stocks = {}
+    data_now = None
+    if (timezone.now() - time_last_update).seconds > 5:
+        data_now = yf.download(stocks_list, start=from_date, end=to_date, threads=3)
+    yesterday = dateformat.format(timezone.now() - timezone.timedelta(days=1), 'Y-m-d')
+    today = dateformat.format(timezone.now(), 'Y-m-d')
+
+    for stock in stocks_list[:-1].split(' '):
+        if data_now is not None:
+            try:
+                if Stock.objects.filter(ticker=stock, date=yesterday).count() != 0:
+                    Stock.objects.filter(ticker=stock, date=yesterday).update(
+                        close_price=data_now['Close'][stock].loc[yesterday])
+                else:
+                    Stock.objects.create(ticker=stock, date=yesterday,
+                                         close_price=data_now['Close'][stock].loc[yesterday]).save()
+            except Exception as e:
+                print("Can not update", yesterday, e)
+
+            try:
+                if Stock.objects.filter(ticker=stock, date=today).count() != 0:
+                    Stock.objects.filter(ticker=stock, date=today).update(
+                        close_price=data_now['Close'][stock].loc[today])
+                else:
+                    Stock.objects.create(ticker=stock, date=today,
+                                         close_price=data_now['Close'][stock].loc[yesterday]).save()
+            except Exception as e:
+                print("Can not update", today, e)
+
+        stocks_ = Stock.objects.filter(date__gte=from_date, date__lte=to_date, ticker=stock)
+        stocks[stock] = pd.DataFrame([s.close_price for s in stocks_], columns=['Close'], index=[
+            dateformat.format(timezone.datetime(s.date.year, s.date.month, s.date.day), 'Y-m-d') for s in stocks_])
+
+
+def update_data(stocks_list, from_date):
     from_date = dateformat.format(from_date, 'Y-m-d')
     to_date = dateformat.format(timezone.now() + timezone.timedelta(days=1), 'Y-m-d')
     stocks = yf.download(stocks_list, start=from_date, end=to_date, threads=3)
@@ -20,6 +58,15 @@ def download_stocks(stocks_list, from_date):
         date = dateformat.format(DATE, 'Y-m-d')
         stocks.loc[date] = np.where(stocks.loc[date].isnull(), stocks.loc[prev_date], stocks.loc[date])
         prev_date = date
+    S = set()
+    for stock in stocks_list.split(' '):
+        S.add(stock)
+    S.remove('')
+    for stock in S:
+        dates = stocks['Close'][stock].keys()
+        values = stocks['Close'][stock].values
+        for i in range(len(dates)):
+            Stock.objects.create(ticker=stock, date=dates[i], close_price=values[i]).save()
 
 
 class PortfolioHandler:
@@ -31,8 +78,9 @@ class PortfolioHandler:
             weight = self.portfolio.stock_weights[i]
             current_date = dateformat.format(timezone.now(), 'Y-m-d')
             creation_date = dateformat.format(self.portfolio.creation_date, 'Y-m-d')
-            s = stocks['Close'][ticker].loc[current_date]
-            f = stocks['Close'][ticker].loc[creation_date]
+            # print(ticker, stocks)
+            s = stocks[ticker]['Close'].loc[current_date]
+            f = stocks[ticker]['Close'].loc[creation_date]
             pr = ((s - f) / f * 100)
             R += pr * weight
             self.info[i][2] = np.round(pr, 2)
@@ -49,12 +97,15 @@ class PortfolioHandler:
         try:
             self.R = self.getR()
         except Exception as e:
-            print(e)
+            print('Error: ', e)
 
     def getRByDates(self, date_from):
         dates = pd.date_range(date_from, timezone.now().date(), freq='D').tolist()
-        local_stocks = stocks['Close'][self.portfolio.stock_tickers]
+        local_stocks = pd.DataFrame([stocks[ticker]['Close'].values for ticker in self.portfolio.stock_tickers]).T
+        local_stocks.columns = self.portfolio.stock_tickers
+        local_stocks.index = dates
         columns = list(local_stocks.columns)
+        print(local_stocks)
         W = {self.portfolio.stock_tickers[i]: self.portfolio.stock_weights[i] for i in range(self.number_stocks)}
         weights = [W[key] for key in columns]
         R = []
@@ -62,4 +113,5 @@ class PortfolioHandler:
             s = local_stocks.loc[dates[i]]
             f = local_stocks.loc[dates[0]]
             R.append(np.array(weights).dot(np.array((s - f) / f)))
+        print(R)
         return [dates, R]
