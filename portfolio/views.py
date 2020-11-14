@@ -1,4 +1,5 @@
 import plotly.graph_objs as go
+import yfinanceng as yf
 from django.db.models import Min
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -8,7 +9,7 @@ from plotly.offline import *
 from portfolio import events, constance
 from portfolio.constance import *
 from portfolio.models import Portfolio
-from portfolio.portfolio_handler import PortfolioHandler, download_stocks, update_data
+from portfolio.portfolio_handler import PortfolioHandler, get_tickers_info, get_all_tickers_from_portfolios
 
 
 def get_full_context(request, context):
@@ -16,50 +17,38 @@ def get_full_context(request, context):
     return {**context, **general_context}
 
 
-def get_all_tickers(portfolios):
-    stocks_list = ''
-    for portfolio in portfolios:
-        for ticker in portfolio.stock_tickers:
-            stocks_list += ticker + ' '
-    return stocks_list
-
-
-def update_info(request):
-    stocks_list, min_create_date = get_stocks_list()
-    update_data(stocks_list, min_create_date)
-    return redirect('/')
-
-
-def get_stocks_list():
-    portfolios = Portfolio.objects.all()
-    return get_all_tickers(portfolios), Portfolio.objects.aggregate(Min('creation_date'))['creation_date__min']
-
-
 def home(request):
-    stocks_list, min_create_date = get_stocks_list()
-    download_stocks(stocks_list, min_create_date)
-    portfolios_to_send = [PortfolioHandler(portfolio) for portfolio in Portfolio.objects.all()]
-    item = 'r'
-    reversed = True
+
+    # get information about stocks and currencies
+
+    stocks_string = get_all_tickers_from_portfolios(Portfolio.objects.all())
+    min_creation_date = Portfolio.objects.aggregate(Min('creation_date'))['creation_date__min']
+    stocks = get_tickers_info(stocks_string, min_creation_date)
+
+    # formation of portfolios for sending
+
+    portfolios_to_send = [PortfolioHandler(portfolio, stocks) for portfolio in Portfolio.objects.all()]
+
+    order_by_item, reversed_order = 'r', True
     if request.method == "GET" and \
             not (isEmptyField(request.GET.get('order'))) and not (isEmptyField(request.GET.get('item'))):
-        reversed = False
+        reversed_order = False
         if request.GET.get('order') == 'reversed':
-            reversed = True
-        item = request.GET.get('item')
-        if item == 'r':
-            portfolios_to_send = sorted(portfolios_to_send, key=lambda x: x.R, reverse=reversed)
-        if item == 'name':
-            portfolios_to_send = sorted(portfolios_to_send, key=lambda x: x.portfolio.name, reverse=reversed)
-        if item == 'number_stocks':
-            portfolios_to_send = sorted(portfolios_to_send, key=lambda x: x.number_stocks, reverse=reversed)
+            reversed_order = True
+        order_by_item = request.GET.get('item')
+        if order_by_item == 'r':
+            portfolios_to_send = sorted(portfolios_to_send, key=lambda x: x.R, reverse=reversed_order)
+        if order_by_item == 'name':
+            portfolios_to_send = sorted(portfolios_to_send, key=lambda x: x.portfolio.name, reverse=reversed_order)
+        if order_by_item == 'number_stocks':
+            portfolios_to_send = sorted(portfolios_to_send, key=lambda x: x.number_stocks, reverse=reversed_order)
     else:
         portfolios_to_send = sorted(portfolios_to_send, key=lambda x: -x.R)
     return render(request, 'pages/all_portfolios.html',
                   get_full_context(request, {'page': MAIN_PAGE_NAME,
                                              'portfolios': portfolios_to_send,
-                                             'item': item,
-                                             'order': reversed}))
+                                             'item': order_by_item,
+                                             'order': reversed_order}))
 
 
 def show_portfolio(request, portfolio_id):
@@ -84,9 +73,7 @@ def create_portfolio(request):
         creation_date = request.POST.get("creation_date")
         if not (isEmptyField(portfolio_name)) and not (isEmptyField(current_stock_exchange)) and not (
                 isEmptyField(current_stocks)) and not (isEmptyField(creation_date)):
-            stock_tickers = []
-            stock_weights = []
-            stock_exchanges = []
+            stock_tickers, stock_currencies, stock_weights, stock_exchanges = [], [], [], []
             i = 1
             while request.POST.get("stocks_%d" % i) is not None and request.POST.get(
                     "stock_exchange_%d" % i) is not None:
@@ -135,10 +122,11 @@ def compare_portfolios(request):
                 if delta.days < 0:
                     date_from = portfolio.creation_date
 
-        stocks_list, min_create_date = get_all_tickers(portfolios), date_from
-        download_stocks(stocks_list, min_create_date)
+        stocks_list, min_create_date = get_all_tickers_from_portfolios(portfolios), date_from
+        stocks = get_tickers_info(stocks_list, min_create_date)
 
-        R = [[portfolio.name, PortfolioHandler(portfolio).getRByDates(date_from)] for portfolio in portfolios]
+        R = [[portfolio.name, PortfolioHandler(portfolio, stocks).get_returns_by_dates(date_from)]
+             for portfolio in portfolios]
 
         fig = go.Figure()
 

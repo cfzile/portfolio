@@ -9,6 +9,7 @@ class Portfolio(models.Model):
     stock_tickers = ArrayField(models.CharField(max_length=10), null=True, default=list())
     stock_weights = ArrayField(models.FloatField(0), null=True, default=list())
     stock_exchanges = ArrayField(models.CharField(max_length=50), null=True, default=list())
+    stock_currencies = ArrayField(models.CharField(max_length=50), null=True, default=list())
     telegram_subscribers = ArrayField(models.CharField(max_length=50), null=True, default=list())
     creation_date = models.DateField(default=timezone.now())
 
@@ -17,3 +18,4 @@ class Stock(models.Model):
     ticker = models.CharField(max_length=50, default="none")
     date = models.DateField(default=timezone.now())
     close_price = models.FloatField(default=0)
+    currency = models.CharField(max_length=50, default='USD=X')
