@@ -3,24 +3,35 @@ import pandas as pd
 import yfinanceng as yf
 from django.utils import timezone, dateformat
 
-from portfolio.models import Stock
+from portfolio.models import Stock, Portfolio
 
 stocks = {}
 time_last_update = timezone.now()
+update_last_date = timezone.now()
+first_download = False
 
 
 def download_stocks(stocks_list, from_date):
-    global stocks
+    global stocks, time_last_update, update_last_date, first_download
+
+    if (timezone.now() - update_last_date).seconds > 60 * 60 * 24 or first_download is False:
+        lst = [lst for lst in Portfolio.objects.values_list('stock_tickers', flat=True)]
+        update_data(' '.join(np.concatenate(lst, axis=0)), from_date)
+        update_last_date = timezone.now()
+
     from_date = dateformat.format(from_date, 'Y-m-d')
     to_date = dateformat.format(timezone.now() + timezone.timedelta(days=1), 'Y-m-d')
     stocks = {}
     data_now = None
-    if (timezone.now() - time_last_update).seconds > 5:
+    if (timezone.now() - time_last_update).seconds > 60:
         data_now = yf.download(stocks_list, start=from_date, end=to_date, threads=3)
+        time_last_update = timezone.now()
     yesterday = dateformat.format(timezone.now() - timezone.timedelta(days=1), 'Y-m-d')
     today = dateformat.format(timezone.now(), 'Y-m-d')
 
-    for stock in stocks_list[:-1].split(' '):
+    for stock in stocks_list.split(' '):
+        if stock == ' ' or stock == '':
+            continue
         if data_now is not None:
             try:
                 if Stock.objects.filter(ticker=stock, date=yesterday).count() != 0:
@@ -42,12 +53,16 @@ def download_stocks(stocks_list, from_date):
             except Exception as e:
                 print("Can not update", today, e)
 
-        stocks_ = Stock.objects.filter(date__gte=from_date, date__lte=to_date, ticker=stock)
+        stocks_ = Stock.objects.filter(date__gte=from_date, date__lte=to_date, ticker=stock).order_by('date')
         stocks[stock] = pd.DataFrame([s.close_price for s in stocks_], columns=['Close'], index=[
             dateformat.format(timezone.datetime(s.date.year, s.date.month, s.date.day), 'Y-m-d') for s in stocks_])
 
+    first_download = True
 
-def update_data(stocks_list, from_date):
+
+def update_data(stocks_list, from_date, delete_all=True):
+    if delete_all:
+        Stock.objects.all().delete()
     from_date = dateformat.format(from_date, 'Y-m-d')
     to_date = dateformat.format(timezone.now() + timezone.timedelta(days=1), 'Y-m-d')
     stocks = yf.download(stocks_list, start=from_date, end=to_date, threads=3)
@@ -60,8 +75,9 @@ def update_data(stocks_list, from_date):
         prev_date = date
     S = set()
     for stock in stocks_list.split(' '):
+        if stock == ' ' or stock == '':
+            continue
         S.add(stock)
-    S.remove('')
     for stock in S:
         dates = stocks['Close'][stock].keys()
         values = stocks['Close'][stock].values
@@ -100,12 +116,12 @@ class PortfolioHandler:
             print('Error: ', e)
 
     def getRByDates(self, date_from):
-        dates = pd.date_range(date_from, timezone.now().date(), freq='D').tolist()
+        dates = [dateformat.format(date, 'Y-m-d') for date in
+                 pd.date_range(date_from, timezone.now().date(), freq='D').tolist()]
         local_stocks = pd.DataFrame([stocks[ticker]['Close'].values for ticker in self.portfolio.stock_tickers]).T
         local_stocks.columns = self.portfolio.stock_tickers
         local_stocks.index = dates
         columns = list(local_stocks.columns)
-        print(local_stocks)
         W = {self.portfolio.stock_tickers[i]: self.portfolio.stock_weights[i] for i in range(self.number_stocks)}
         weights = [W[key] for key in columns]
         R = []
@@ -113,5 +129,4 @@ class PortfolioHandler:
             s = local_stocks.loc[dates[i]]
             f = local_stocks.loc[dates[0]]
             R.append(np.array(weights).dot(np.array((s - f) / f)))
-        print(R)
         return [dates, R]
