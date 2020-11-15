@@ -9,7 +9,8 @@ from plotly.offline import *
 from portfolio import events, constance
 from portfolio.constance import *
 from portfolio.models import Portfolio
-from portfolio.portfolio_handler import PortfolioHandler, get_tickers_info, get_all_tickers_from_portfolios
+from portfolio.portfolio_handler import PortfolioHandler, get_tickers_info, get_all_tickers_from_portfolios, \
+    get_all_exist_tickets, update_data
 
 
 def get_full_context(request, context):
@@ -145,3 +146,8 @@ def compare_portfolios(request):
     return render(request, 'pages/compare.html', get_full_context(request, {'page': COMPARE_PORTFOLIOS_PAGE_NAME,
                                                                             'portfolios': Portfolio.objects.all(),
                                                                             }))
+
+
+def update_data_(request):
+    update_data(get_all_exist_tickets(), Portfolio.objects.aggregate(Min('creation_date'))['creation_date__min'])
+    return redirect('/')
