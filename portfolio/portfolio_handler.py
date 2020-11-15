@@ -123,10 +123,10 @@ class PortfolioHandler:
                 f = self.stocks[ticker]['Close'].loc[creation_date]
                 currency_f = self.stocks[currency]['Close'].loc[creation_date]
                 currency_s = self.stocks[currency]['Close'].loc[current_date]
-                pr = (((s - f) / f + (currency_s - currency_f)/currency_f) * 100)
+                pr = (((s - f) / f - (currency_s - currency_f)/currency_f) * 100)
                 returns += pr * weight
                 self.info[i][2] = np.round((s - f) / f * 100, 2)
-                self.info[i][3] = np.round((currency_s - currency_f)/currency_f * 100, 2)
+                self.info[i][3] = -np.round((currency_s - currency_f)/currency_f * 100, 2)
                 self.info[i][4] = np.round(pr, 2)
                 self.info[i][5] = np.round(weight * pr, 10)
             return np.round(returns, 2)
