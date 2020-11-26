@@ -96,8 +96,8 @@ def update_data(stocks_string, from_date, clear_old_info=True):
     for stock in stocks_string.split(' '):
         dates = stocks['Close'][stock].keys()
         values = stocks['Close'][stock].values
+        value = 1
         for i in range(len(dates)):
-            value = 1
             if not(math.isnan(values[i])):
                 value = values[i]
             else:
@@ -158,5 +158,5 @@ class PortfolioHandler:
             currency_s = np.array(
                 [self.stocks[currency]['Close'].loc[dates[i]] for currency in self.portfolio.stock_currencies])
             returns.append(np.array(self.portfolio.stock_weights).dot(
-                np.array((s - f) / f) + (currency_s - currency_f) / currency_f))
+                np.array((s / f * (1 - (currency_s - currency_f)/currency_f) - 1) * 100)))
         return [dates, returns]
