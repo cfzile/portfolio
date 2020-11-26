@@ -100,6 +100,11 @@ def update_data(stocks_string, from_date, clear_old_info=True):
         for i in range(len(dates)):
             if not(math.isnan(values[i])):
                 value = values[i]
+                break
+
+        for i in range(len(dates)):
+            if not(math.isnan(values[i])):
+                value = values[i]
             else:
                 print('NaN value for', stock)
             Stock.objects.create(ticker=stock, date=dates[i], close_price=value).save()
