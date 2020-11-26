@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from portfolio.models import Portfolio
+from portfolio.models import Portfolio, Stock
 
 
 class Portfolios(admin.ModelAdmin):
@@ -10,4 +10,12 @@ class Portfolios(admin.ModelAdmin):
     view_on_site = True
 
 
+class Stocks(admin.ModelAdmin):
+    list_display = ('ticker', 'date', 'close_price', 'currency')
+    fields = ['ticker', 'date', 'close_price', 'currency']
+    list_display_links = ('ticker',)
+    view_on_site = True
+
+
 admin.site.register(Portfolio, Portfolios)
+admin.site.register(Stock, Stocks)
