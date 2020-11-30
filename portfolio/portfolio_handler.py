@@ -48,7 +48,7 @@ def get_tickers_info(stocks_string, from_date):
     today = dateformat.format(timezone.now(), 'Y-m-d')
     today_info, stocks = None, {}
 
-    if (timezone.now() - latest_time_of_today_info_update).seconds > 60:
+    if (timezone.now() - latest_time_of_today_info_update).seconds > 5 * 60:
         today_info = yf.download(stocks_string, start=from_date, end=to_date, threads=3)
         latest_time_of_today_info_update = timezone.now()
 
