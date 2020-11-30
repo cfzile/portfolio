@@ -115,14 +115,13 @@ def update_data(stocks_string, from_date, clear_old_info=True):
 
 class PortfolioHandler:
 
-    def get_return(self):
+    def get_return(self, current_date):
         try:
             returns = 0
             for i in range(len(self.portfolio.stock_tickers)):
                 ticker = self.portfolio.stock_tickers[i]
                 weight = self.portfolio.stock_weights[i]
                 currency = self.portfolio.stock_currencies[i]
-                current_date = dateformat.format(timezone.now(), 'Y-m-d')
                 creation_date = dateformat.format(self.portfolio.creation_date, 'Y-m-d')
                 s = self.stocks[ticker]['Close'].loc[current_date]
                 f = self.stocks[ticker]['Close'].loc[creation_date]
@@ -146,7 +145,7 @@ class PortfolioHandler:
         self.number_stocks = len(portfolio.stock_tickers)
         self.info = [[portfolio.stock_tickers[i], np.round(portfolio.stock_weights[i], 10), 0, 0, 0, 0]
                      for i in range(self.number_stocks)]
-        self.R = self.get_return()
+        self.R = self.get_return('2020-11-30')
 
     def get_returns_by_dates(self, date_from):
         dates = [dateformat.format(date, 'Y-m-d') for date in
